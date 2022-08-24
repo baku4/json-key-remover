@@ -1,2 +1,2 @@
-# json-strip
-Strip specific record of json for preprocessing
+# json-key-remover
+Remove specific key of `json`
