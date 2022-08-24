@@ -1,4 +1,4 @@
-use clap::Parser;
+use clap::{AppSettings, Parser};
 use std::path::PathBuf;
 use std::io::{Read, Write, stdin, stdout};
 use std::fs::File;
@@ -7,18 +7,19 @@ use json_key_remover::KeyRemover;
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
+#[clap(global_setting(AppSettings::DeriveDisplayOrder))]
 struct Args {
-    /// Input file path [default: stdin]
-    #[clap(short, long, value_parser, value_name = "FILE")]
-    input: Option<PathBuf>,
-
-    /// Output file path [default: stdout]
-    #[clap(short, long, value_parser, value_name = "FILE")]
-    output: Option<PathBuf>,
-
     /// Comma separated key list to remove
     #[clap(short, long, value_parser, value_name = "KEY1,KEY2,...,KEYn")]
     keys: String,
+
+    /// Input file path [default: STDIN]
+    #[clap(short, long, value_parser, value_name = "FILE")]
+    input: Option<PathBuf>,
+
+    /// Output file path [default: STDOUT]
+    #[clap(short, long, value_parser, value_name = "FILE")]
+    output: Option<PathBuf>,
  
     /// Buffer size in byte.
     #[clap(short, long, value_parser, default_value_t = 64*1024)]
