@@ -21,7 +21,7 @@ struct Args {
     keys: String,
  
     /// Buffer size in byte.
-    #[clap(short, long, value_parser, default_value_t = 1048576)]
+    #[clap(short, long, value_parser, default_value_t = 64*1024)]
     size: u32,
 }
 
