@@ -88,7 +88,7 @@ impl KeyRemover {
                 _ => {
                     // ScannerState::MeetKeyCandOpener | ScannerState::ConfirmingKey | ScannerState::DefiningValueType
                     // Defer
-                    let chr_index = self.previous_chr_index(&self.scanner.key_cand_opener_index());
+                    let chr_index = self.scanner.key_cand_opener_index();
                     if self.first_buffer_index < chr_index.0 {
                         let last_buffer_index_to_write = chr_index.0 - 1;
                         let message_end_index = self.get_message_end_index(last_buffer_index_to_write);
@@ -104,7 +104,13 @@ impl KeyRemover {
                 // (1) Get messages
                 let mut messages_to_write: Vec<Message> = self.message_queue.drain(0..message_end_index).collect();
 
-                // (2) Add messages by mode
+                // (2) Adjust messages by mode
+                if let Some(Message::SkipEndPreviousTo(chr_index)) = messages_to_write.first() {
+                    if chr_index.1 == 0 && chr_index.0 == self.first_buffer_index {
+                        messages_to_write.remove(0);
+                        mode = Mode::Remain;
+                    }
+                }
                 if let Mode::Skip = mode {
                     messages_to_write.insert(0, Message::SkipStartFrom((self.first_buffer_index, 0)));
                 }
